@@ -4,7 +4,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using NLog;
-using Page2Feed.Web.Model;
+using Page2Feed.Core.Model;
 using Page2Feed.Web.Services.Interfaces;
 
 namespace Page2Feed.Web.Services

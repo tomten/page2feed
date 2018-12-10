@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Page2Feed.Web.Model
+namespace Page2Feed.Core.Model
 {
 
     public class FeedEntry

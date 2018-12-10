@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Page2Feed.Web.Model;
-using Page2Feed.Web.Model.Atom;
+using Page2Feed.Core.Model;
+using Page2Feed.Core.Model.Atom;
 
 namespace Page2Feed.Web.Services.Interfaces
 {

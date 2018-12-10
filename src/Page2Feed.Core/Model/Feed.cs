@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Page2Feed.Web.Model
+namespace Page2Feed.Core.Model
 {
 
     public class Feed

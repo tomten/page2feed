@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Page2Feed.Web.Model;
+using Page2Feed.Core.Model;
 
 namespace Page2Feed.Web.Services.Interfaces
 {

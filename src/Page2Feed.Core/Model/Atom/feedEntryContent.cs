@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.Xml.Serialization;
 
-namespace Page2Feed.Web.Model.Atom
+namespace Page2Feed.Core.Model.Atom
 {
     /// <remarks/>
     [Serializable]

@@ -9,7 +9,7 @@ using System.Xml.Serialization;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using NLog;
-using Page2Feed.Web.Model.Atom;
+using Page2Feed.Core.Model.Atom;
 using Page2Feed.Web.Models;
 using Page2Feed.Web.Services.Interfaces;
 

@@ -14,4 +14,9 @@
     <PackageReference Include="NUnit" Version="3.11.0" />
   </ItemGroup>
 
+
+  <ItemGroup>
+    <ProjectReference Include="..\Page2Feed.Core\Page2Feed.Core.csproj" />
+  </ItemGroup>
+
 </Project>
