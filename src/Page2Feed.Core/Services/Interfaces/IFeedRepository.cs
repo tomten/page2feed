@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Page2Feed.Core.Model;
 
-namespace Page2Feed.Web.Services.Interfaces
+namespace Page2Feed.Core.Services.Interfaces
 {
 
     public interface IFeedRepository

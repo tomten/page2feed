@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace Page2Feed.Web.Services.Interfaces
+namespace Page2Feed.Core.Services.Interfaces
 {
 
     public interface IWebRepository

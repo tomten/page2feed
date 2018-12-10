@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using NLog;
 using Page2Feed.Core.Model;
-using Page2Feed.Web.Services.Interfaces;
+using Page2Feed.Core.Services.Interfaces;
 
-namespace Page2Feed.Web.Services
+namespace Page2Feed.Core.Services
 {
 
     public class FileFeedRepository : IFeedRepository

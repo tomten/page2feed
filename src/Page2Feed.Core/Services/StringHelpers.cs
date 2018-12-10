@@ -2,7 +2,7 @@
 using System.Security.Cryptography;
 using System.Text;
 
-namespace Page2Feed.Web.Services
+namespace Page2Feed.Core.Services
 {
 
     public static class StringHelpers

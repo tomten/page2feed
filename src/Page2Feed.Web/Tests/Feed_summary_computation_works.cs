@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 using NUnit.Framework;
-using Page2Feed.Web.Services;
+using Page2Feed.Core.Services;
 
 // ReSharper disable InconsistentNaming
 

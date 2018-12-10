@@ -3,19 +3,19 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
 using NLog;
-using Page2Feed.Web.Services.Interfaces;
+using Page2Feed.Core.Services.Interfaces;
 
-namespace Page2Feed.Web.Services
+namespace Page2Feed.Web.Program
 {
 
     // ReSharper disable once ClassNeverInstantiated.Global
-    public class FeedHostedService : BackgroundService
+    public class FeedBackgroundService : BackgroundService
     {
 
         private readonly IFeedService _feedService;
         private readonly ILogger _log;
 
-        public FeedHostedService(IFeedService feedService)
+        public FeedBackgroundService(IFeedService feedService)
         {
             _feedService = feedService;
             _log = LogManager.GetLogger("Feeds");

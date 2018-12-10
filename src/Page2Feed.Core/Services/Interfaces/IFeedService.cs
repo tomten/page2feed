@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Page2Feed.Core.Model;
 using Page2Feed.Core.Model.Atom;
 
-namespace Page2Feed.Web.Services.Interfaces
+namespace Page2Feed.Core.Services.Interfaces
 {
 
     public interface IFeedService

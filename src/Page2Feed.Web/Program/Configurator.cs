@@ -4,8 +4,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Page2Feed.Web.Services;
-using Page2Feed.Web.Services.Interfaces;
+using Page2Feed.Core.Services;
+using Page2Feed.Core.Services.Interfaces;
 
 namespace Page2Feed.Web.Program
 {
@@ -32,7 +32,7 @@ namespace Page2Feed.Web.Program
 
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-            services.AddHostedService<FeedHostedService>();
+            services.AddHostedService<FeedBackgroundService>();
             services.AddTransient<IFeedService, FeedService>();
             services.AddTransient<IFeedRepository, FileFeedRepository>();
             services.AddTransient<IWebRepository, WebRepository>();

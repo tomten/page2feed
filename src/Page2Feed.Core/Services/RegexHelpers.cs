@@ -1,6 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 
-namespace Page2Feed.Web.Services
+namespace Page2Feed.Core.Services
 {
 
     public static class RegexHelpers

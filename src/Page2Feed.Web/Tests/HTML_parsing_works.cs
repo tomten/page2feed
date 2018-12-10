@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using HtmlAgilityPack;
 using NUnit.Framework;
-using Page2Feed.Web.Services;
+using Page2Feed.Core.Services;
 
 // ReSharper disable InconsistentNaming
 

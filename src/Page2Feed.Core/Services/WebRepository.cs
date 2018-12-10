@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Page2Feed.Web.Services.Interfaces;
+using Page2Feed.Core.Services.Interfaces;
 
-namespace Page2Feed.Web.Services
+namespace Page2Feed.Core.Services
 {
 
     public class WebRepository : IWebRepository
