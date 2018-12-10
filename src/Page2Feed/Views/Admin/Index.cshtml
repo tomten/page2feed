@@ -1,0 +1,33 @@
+﻿@model dynamic
+
+@{
+    Layout = "~/Views/_Admin.cshtml";
+    //ViewBag.Title = "title";
+}
+
+<h1>Admin</h1>
+<h2 notification>@ViewBag.Message</h2>
+<section name="Feeds">
+    <h3>Feeds</h3>
+    <ul>
+        @foreach (var feed in ViewBag.Feeds)
+        {
+            <li>@feed.ToString()</li>
+        }
+    </ul>
+</section>
+<section name="create">
+    <h3>Create</h3>
+    <form method="post" action="/createfeed">
+        <label for="feedGroupName">GROUP</label>
+        <input type="text" id="feedGroupName" name="feedGroupName" />
+        <br />
+        <label for="feedName">NAME</label>
+        <input type="text" id="feedName" name="feedName" />
+        <br />
+        <label for="feedUri">URI</label>
+        <input type="url" id="feedUri" name="feedUri" />
+        <br />
+        <button value="CREATE">CREATE</button>
+    </form>
+</section>
