@@ -1,4 +1,6 @@
-﻿@{
+﻿@model AdminIndexViewModel
+
+@{
     ViewData["Title"] = "Admin";
 }
 
@@ -11,9 +13,9 @@
 <section name="Feeds">
     <h3>Feeds</h3>
     <ul>
-        @foreach (var feed in ViewBag.Feeds)
+        @foreach (var feed in Model.Feeds)
         {
-            <li>@feed.ToString()</li>
+            <li><a href="@feed.Link">@feed.Group: @feed.Name (@feed.Entries entries)</a></li>
         }
     </ul>
 </section>

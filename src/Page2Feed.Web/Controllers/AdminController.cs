@@ -1,6 +1,9 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Page2Feed.Core.Services.Interfaces;
+using Page2Feed.Web.Models;
 
 namespace Page2Feed.Web.Controllers
 {
@@ -21,10 +24,32 @@ namespace Page2Feed.Web.Controllers
         )
         {
             ViewBag.Message = message;
-            ViewBag.Feeds = await _feedService.GetFeeds();
-            return View();
+            var feeds = await _feedService.GetFeeds();
+            var adminIndexViewModel =
+                new AdminIndexViewModel
+                {
+                    Feeds =
+                        feeds.Select(
+                            feed =>
+                                new AdminFeedViewModel
+                                {
+                                    Name = feed.Name,
+                                    Group = feed.Group,
+                                    Entries = feed.Entries.Count,
+                                    Link = Url.Action(
+                                        "Get",
+                                        "Feed",
+                                        new
+                                        {
+                                            FeedGroupName = feed.Group,
+                                            FeedName = feed.Name,
+                                        }
+                                    )
+                                }
+                        )
+                };
+            return View(adminIndexViewModel);
         }
 
     }
-
 }
