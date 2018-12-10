@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Page2Feed.Web.Services;
+using Page2Feed.Web.Services.Interfaces;
 
 namespace Page2Feed.Web.Program
 {
@@ -30,10 +32,10 @@ namespace Page2Feed.Web.Program
 
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-            //services.AddHostedService<FeedHostedService>();
-            //services.AddTransient<IFeedService, FeedService>();
-            //services.AddTransient<IFeedRepository, FileFeedRepository>();
-            //services.AddTransient<IWebRepository, WebRepository>();
+            services.AddHostedService<FeedHostedService>();
+            services.AddTransient<IFeedService, FeedService>();
+            services.AddTransient<IFeedRepository, FileFeedRepository>();
+            services.AddTransient<IWebRepository, WebRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
