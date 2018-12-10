@@ -1,25 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Page2Feed.Web
+namespace Page2Feed.Web.Program
 {
-    public class Startup
+
+    public class Configurator
     {
-        public Startup(IConfiguration configuration)
+
+        public Configurator(IConfiguration configuration)
         {
             Configuration = configuration;
         }
 
-        public IConfiguration Configuration { get; }
+        private IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -33,6 +30,10 @@ namespace Page2Feed.Web
 
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            //services.AddHostedService<FeedHostedService>();
+            //services.AddTransient<IFeedService, FeedService>();
+            //services.AddTransient<IFeedRepository, FileFeedRepository>();
+            //services.AddTransient<IWebRepository, WebRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -60,5 +61,7 @@ namespace Page2Feed.Web
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
         }
+
     }
+
 }
