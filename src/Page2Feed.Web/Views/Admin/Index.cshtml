@@ -1,12 +1,13 @@
-﻿@model dynamic
-
-@{
-    Layout = "~/Views/_Admin.cshtml";
-    //ViewBag.Title = "title";
+﻿@{
+    ViewData["Title"] = "Admin";
 }
 
-<h1>Admin</h1>
-<h2 notification>@ViewBag.Message</h2>
+<div class="text-center">
+    <h1 class="display-4">@ViewData["Title"]</h1>
+</div>
+<div class="text-center">
+    <h2 class="display-4" notification>@ViewBag.Message</h2>
+</div>
 <section name="Feeds">
     <h3>Feeds</h3>
     <ul>
