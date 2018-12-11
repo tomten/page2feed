@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using HtmlAgilityPack;
+using AngleSharp.Dom;
+using AngleSharp.Extensions;
+using AngleSharp.Parser.Html;
 using NLog;
 using Page2Feed.Core.Model;
 using Page2Feed.Core.Model.Atom;
@@ -112,7 +114,7 @@ namespace Page2Feed.Core.Services
             )
         {
             var contents = await _webRepository.GetContents(uri);
-            var contentSummary =
+            var contentSummary = await
                 MakeSummary(
                     contentsOld,
                     contents
@@ -126,21 +128,21 @@ namespace Page2Feed.Core.Services
                 };
             return feedState;
         }
-
-        public string MakeSummary(
+        
+        public async Task<string> MakeSummary(
             string originalHtmlContentsOld,
             string originalHtmlContents
             )
         {
-            var html = new HtmlDocument();
-            html.LoadHtml(originalHtmlContents);
-            html.DocumentNode.Descendants()
-                .Where(htmlNode => htmlNode.Name == "script" || htmlNode.Name == "style")
+            var html = new HtmlParser();
+            var doc = await html.ParseAsync(originalHtmlContents);
+            doc.Body.Descendents<IElement>()
+                .Where(htmlNode => htmlNode.TagName == "script" || htmlNode.TagName == "style")
                 .ToList()
-                .ForEach(htmlNode => htmlNode.Remove());
+                .ForEach(htmlNode => htmlNode.Parent.RemoveChild(htmlNode));
             var text =
-                html
-                    .DocumentNode
+                doc
+                    .Body
                     .InnerText
                     .RegexReplace(
                         @"\s+",
@@ -149,15 +151,15 @@ namespace Page2Feed.Core.Services
             var textOld = ""; // HACK
             if (originalHtmlContentsOld != null)
             {
-                var htmlOld = new HtmlDocument();
-                htmlOld.LoadHtml(originalHtmlContentsOld);
-                htmlOld.DocumentNode.Descendants()
-                    .Where(htmlNode => htmlNode.Name == "script" || htmlNode.Name == "style")
+                var htmlOld = new HtmlParser();
+                var docOld = await htmlOld.ParseAsync(originalHtmlContentsOld);
+                docOld.Body.Descendents<IElement>()
+                    .Where(htmlNode => htmlNode.TagName == "script" || htmlNode.TagName == "style")
                     .ToList()
-                    .ForEach(htmlNode => htmlNode.Remove());
+                    .ForEach(htmlNode => htmlNode.Parent.RemoveChild(htmlNode));
                 textOld =
-                    htmlOld
-                        .DocumentNode
+                    docOld
+                        .Body
                         .InnerText
                         .RegexReplace(
                             @"\s+",

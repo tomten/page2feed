@@ -2,13 +2,15 @@
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using HtmlAgilityPack;
+using AngleSharp.Dom;
+using AngleSharp.Extensions;
+using AngleSharp.Parser.Html;
 using NUnit.Framework;
 using Page2Feed.Core.Services;
 
 // ReSharper disable InconsistentNaming
 
-namespace Page2Feed.Web.Tests
+namespace Page2Feed.Tests.Tests
 {
 
     [TestFixture]
@@ -16,29 +18,47 @@ namespace Page2Feed.Web.Tests
     {
 
         [Test]
-        public void HTML_summary_parsing_works()
+        public void HTML_summary_parsing_works__AngleSharp()
         {
-            var html = new HtmlDocument();
-            html.Load(
+            var sampleHtmlPath = Path.Combine(
                 Path.Combine(
-                    Path.Combine(
-                        AppDomain.CurrentDomain.BaseDirectory,
-                        "Tests"
-                    ),
-                    "sample.html"
-                )
+                    AppDomain.CurrentDomain.BaseDirectory,
+                    "Tests"
+                ),
+                "sample.html"
             );
-            html.DocumentNode.Descendants()
-                .Where(htmlNode => htmlNode.Name == "script" || htmlNode.Name == "style")
-                .ToList()
-                .ForEach(htmlNode => htmlNode.Remove());
-            var texten = html.DocumentNode.InnerText.RegexReplace(@"\s+", " ");
-            var text = html.DocumentNode.Descendants().Select(htmlNode => htmlNode.InnerText);
-            var texts = string.Join(" ", text);
-            var texts2 = texts.Replace("\r", " ");
-            var texts3 = texts2.Replace("\n", " ");
-            var texts4 = Regex.Replace(texts3, @"\s+", " ").Trim();
+            var html = new HtmlParser().Parse(File.OpenRead(sampleHtmlPath));
+            foreach (var element in html.DocumentElement.Descendents<IElement>())
+            {
+                var scripts = element.GetElementsByTagName("script");
+                foreach (var script in scripts)
+                {
+                    script.Parent.RemoveChild(script);
+                }
+                var styles = element.GetElementsByTagName("style");
+                foreach (var style in styles)
+                {
+                    style.Parent.RemoveChild(style);
+                }
+            }
+
+            var texts5 =
+                html
+                    .Body
+                    .InnerText
+                    .Replace("\r", " ")
+                    .Replace("\n", " ")
+                    .RegexReplace(@"\s+", " ")
+                    .Trim()
+                    ;
+            var texts4 =
+                Regex.Replace(
+                    string.Join(
+                        " ",
+                        html.Body.InnerText
+                    ).Replace("\r", " ").Replace("\n", " "), @"\s+", " ").Trim();
         }
 
     }
+
 }
