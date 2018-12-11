@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using NLog;
 using Page2Feed.Core.Services.Interfaces;
@@ -14,11 +15,17 @@ namespace Page2Feed.Web.Program
 
         private readonly IFeedService _feedService;
         private readonly ILogger _log;
+        private readonly TimeSpan _feedCheckInterval;
 
-        public FeedBackgroundService(IFeedService feedService)
+        public FeedBackgroundService(IFeedService feedService, IConfiguration configuration)
         {
             _feedService = feedService;
             _log = LogManager.GetLogger("Feeds");
+            if (!TimeSpan.TryParse(configuration["Page2Feed:FeedCheckInterval"], out _feedCheckInterval))
+                throw new ArgumentException(
+                    "Could not parse feed check interval",
+                    "Page2Feed:FeedCheckInterval"
+                    );
         }
 
         protected override async Task ExecuteAsync(
@@ -31,9 +38,8 @@ namespace Page2Feed.Web.Program
                 {
                     _log.Trace("Running feed task (FeedHostedService.ExecuteAsync)...");
                     await _feedService.ProcessFeeds();
-                    var wait = TimeSpan.FromMinutes(5);
-                    _log.Trace($"Waiting {wait:g} for next run...");
-                    await Task.Delay(wait, stoppingToken);
+                    _log.Trace($"Waiting {_feedCheckInterval:g} for next run...");
+                    await Task.Delay(_feedCheckInterval, stoppingToken);
                     if (stoppingToken.IsCancellationRequested)
                     {
                         _log.Info("FeedHostedService.ExecuteAsync stopped while delaying on service execution cancellation token.");

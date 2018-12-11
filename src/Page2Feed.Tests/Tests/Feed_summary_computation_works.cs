@@ -1,11 +1,12 @@
 ﻿using System;
 using System.IO;
+using System.Threading.Tasks;
 using NUnit.Framework;
 using Page2Feed.Core.Services;
 
 // ReSharper disable InconsistentNaming
 
-namespace Page2Feed.Web.Tests
+namespace Page2Feed.Tests.Tests
 {
 
     [TestFixture]
@@ -67,7 +68,7 @@ namespace Page2Feed.Web.Tests
         }
 
         [Test]
-        public void Feed_summary_is_computed_correctly()
+        public async Task Feed_summary_is_computed_correctly()
         {
 
             // Arrange
@@ -90,7 +91,7 @@ namespace Page2Feed.Web.Tests
 
             // Act
             var summary =
-                new FeedService(
+                await new FeedService(
                         null,
                         null
                     )

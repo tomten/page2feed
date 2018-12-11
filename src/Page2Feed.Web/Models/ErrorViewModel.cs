@@ -1,5 +1,3 @@
-using System;
-
 namespace Page2Feed.Web.Models
 {
     public class ErrorViewModel
