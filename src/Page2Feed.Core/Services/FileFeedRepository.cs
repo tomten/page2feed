@@ -13,11 +13,12 @@ namespace Page2Feed.Core.Services
     public class FileFeedRepository : IFeedRepository
     {
 
-        private const string BasePath = @"d:\temp\feed\"; // TODO
+        private readonly string _feedBasePath;
         private readonly ILogger _log;
 
-        public FileFeedRepository()
+        public FileFeedRepository(string feedBasePath)
         {
+            _feedBasePath = feedBasePath;
             _log = LogManager.GetLogger("Feeds");
         }
 
@@ -56,7 +57,7 @@ namespace Page2Feed.Core.Services
                 _log.Trace($"Getting feed {fileName}...");
                 var filePath =
                     Path.Combine(
-                        BasePath,
+                        _feedBasePath,
                         fileName
                     );
                 using (var fileStream = File.OpenText(filePath))
@@ -85,7 +86,7 @@ namespace Page2Feed.Core.Services
                 );
             var filePath =
                 Path.Combine(
-                    BasePath,
+                    _feedBasePath,
                     fileName
                 );
             return filePath;
@@ -116,7 +117,7 @@ namespace Page2Feed.Core.Services
         public async Task<IEnumerable<Feed>> GetAll()
         {
             var feeds = new List<Feed>();
-            var filePaths = Directory.EnumerateFiles(BasePath);
+            var filePaths = Directory.EnumerateFiles(_feedBasePath);
             foreach (var filePath in filePaths)
             {
                 var fileName = Path.GetFileName(filePath);

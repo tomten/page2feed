@@ -34,7 +34,7 @@ namespace Page2Feed.Web.Program
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddHostedService<FeedBackgroundService>();
             services.AddTransient<IFeedService, FeedService>();
-            services.AddTransient<IFeedRepository, FileFeedRepository>();
+            services.AddTransient<IFeedRepository, FileFeedRepository>(provider => new FileFeedRepository(Configuration["Page2Feed:FileFeedRepository:FeedBasePath"]));
             services.AddTransient<IWebRepository, WebRepository>();
         }
 
