@@ -87,11 +87,11 @@ namespace Page2Feed.Core.Services
                 entry = feed.Entries.Select(e => new feedEntry
                 {
                     updated = e.Timestamp.GetValueOrDefault().ToString("O"),
-                    title = $"{e.Body.Substring(0, 30)}...",
+                    title = $"{e.Body.PadRight(30).Substring(0, 30)}...",
                     id = e.Id,
                     link = new[] { new feedEntryLink { href = feed.Uri.ToString() } },
                     content = new feedEntryContent { type = "xhtml", div = e.Body },
-                    summary = $"{e.Body.Substring(0, 30)}...",
+                    summary = $"{e.Body.PadRight(30).Substring(0, 30)}...",
                     author = new feedEntryAuthor { email = "test@test.test", name = "test" }
                 }).ToArray()
             };
