@@ -128,7 +128,7 @@ namespace Page2Feed.Core.Services
                 };
             return feedState;
         }
-        
+
         public async Task<string> MakeSummary(
             string originalHtmlContentsOld,
             string originalHtmlContents
@@ -229,6 +229,9 @@ namespace Page2Feed.Core.Services
 
         public string TrimSameStart(string s1, string s2)
         {
+            if (s1 == s2)
+                return "";
+
             var currentStringPosition = 0;
             while (
                 currentStringPosition < s1.Length &&
@@ -238,6 +241,9 @@ namespace Page2Feed.Core.Services
             {
                 currentStringPosition++;
             }
+
+            if (s2.Length == currentStringPosition)
+                currentStringPosition--;
 
             while (
                 currentStringPosition > 0 &&
