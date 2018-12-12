@@ -222,6 +222,14 @@ namespace Page2Feed.Core.Services
             }
         }
 
+        public async Task DeleteFeed(string feedGroupName, string feedName)
+        {
+            await _feedRepository.Delete(
+                feedGroupName, 
+                feedName
+                );
+        }
+
         public async Task SaveFeed(Feed feed)
         {
             await _feedRepository.Store(feed);

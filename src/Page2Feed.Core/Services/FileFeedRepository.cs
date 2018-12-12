@@ -127,6 +127,19 @@ namespace Page2Feed.Core.Services
             return feeds;
         }
 
+        public async Task Delete(
+            string feedGroupName,
+            string feedName
+            )
+        {
+            var filePath =
+                MakeFilePath(
+                    feedGroupName,
+                    feedName
+                );
+            File.Delete(filePath);
+        }
+
         private string MakeFileName(
             string feedGroupName,
             string feedName

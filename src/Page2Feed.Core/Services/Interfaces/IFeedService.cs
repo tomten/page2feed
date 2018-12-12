@@ -40,6 +40,11 @@ namespace Page2Feed.Core.Services.Interfaces
 
         Task ProcessFeeds();
 
+        Task DeleteFeed(
+            string feedName, 
+            string feedGroupName
+            );
+
     }
 
 }

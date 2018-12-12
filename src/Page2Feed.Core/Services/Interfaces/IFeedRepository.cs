@@ -19,6 +19,11 @@ namespace Page2Feed.Core.Services.Interfaces
 
         Task<IEnumerable<Feed>> GetAll();
 
+        Task Delete(
+            string feedGroupName, 
+            string feedName
+            );
+
     }
 
 }

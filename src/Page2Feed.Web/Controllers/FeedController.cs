@@ -14,7 +14,7 @@ namespace Page2Feed.Web.Controllers
 {
 
     [ApiController]
-    public class FeedController : ControllerBase
+    public class FeedController : Controller
     {
 
         private readonly IFeedService _feedService;
@@ -39,10 +39,28 @@ namespace Page2Feed.Web.Controllers
                 feedGroupName: feedGroupName,
                 feedUri: feedUri
             );
+            TempData["Message"] = $"Created feed '{feedGroupName}:{feedName}'.";
             return RedirectToAction(
                 "Index",
-                "Admin",
-                new { message = $"Created feed '{feedGroupName}:{feedName}'." }
+                "Admin"
+            );
+        }
+
+        [Route("~/deleteFeed")]
+        [HttpPost]
+        public async Task<ActionResult<string>> DeleteFeed(
+            [FromForm]string feedName,
+            [FromForm]string feedGroupName
+        )
+        {
+            await _feedService.DeleteFeed(
+                feedName: feedName,
+                feedGroupName: feedGroupName
+            );
+            TempData["Message"] = $"Deleted feed '{feedGroupName}:{feedName}'.";
+            return RedirectToAction(
+                "Index",
+                "Admin"
             );
         }
 
