@@ -1,4 +1,6 @@
-﻿@model AdminIndexViewModel
+﻿@using Page2Feed.Core.Services
+@using Page2Feed.Web.Program
+@model AdminIndexViewModel
 
 @{
     ViewData["Title"] = "Admin";
@@ -16,7 +18,10 @@
         @foreach (var feed in Model.Feeds)
         {
             <li>
-                <a href="@feed.Link">@feed.Group: @feed.Name (@feed.Entries entries)</a>
+                @{
+                    var ago = (DateTimeOffset.Now - feed.LastUpdated).TimeDelta(true);
+                }
+                <a href="@feed.Link">@feed.Group: @feed.Name (@feed.Entries entries; last entry @ago ago)</a>
                 @using (Html.BeginForm("DeleteFeed", "Feed", null, FormMethod.Post, false, null))
                 {
                     <input type="hidden" name="feedGroupName" value="@feed.Group" />
@@ -25,6 +30,12 @@
                 }
             </li>
         }
+        <li>
+            @{
+                var next = (FeedBackgroundService.NextFeedCheck - DateTimeOffset.Now).TimeDelta(true);
+            }
+            Next feed check in @next
+        </li>
     </ul>
 </section>
 <section name="create">

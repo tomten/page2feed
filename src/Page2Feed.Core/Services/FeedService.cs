@@ -86,7 +86,7 @@ namespace Page2Feed.Core.Services
                 },
                 entry = feed.Entries.Select(e => new feedEntry
                 {
-                    updated = e.Timestamp.GetValueOrDefault().ToString("O"),
+                    updated = e.Timestamp.ToString("O"),
                     title = $"{e.Body.PadRight(30).Substring(0, 30)}...",
                     id = e.Id,
                     link = new[] { new feedEntryLink { href = feed.Uri.ToString() } },

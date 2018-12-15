@@ -36,6 +36,7 @@ namespace Page2Feed.Web.Controllers
                                     Name = feed.Name,
                                     Group = feed.Group,
                                     Entries = feed.Entries.Count,
+                                    LastUpdated = feed.Entries.Max(f => f.Timestamp),
                                     Link = Url.Action(
                                         "Get",
                                         "Feed",

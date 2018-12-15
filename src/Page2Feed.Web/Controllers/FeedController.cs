@@ -83,7 +83,7 @@ namespace Page2Feed.Web.Controllers
                 _log.Trace($"Got feed.");
                 var feedTitle = $"{feed.Group}: {feed.Name}";
                 var feedDescription = feed.Name;
-                var lastUpdatedTime = feed.Entries.Max(e => e.Timestamp).GetValueOrDefault();
+                var lastUpdatedTime = feed.Entries.Max(e => e.Timestamp);
                 var atom =
                     _feedService
                         .Atom(
