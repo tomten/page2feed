@@ -13,14 +13,14 @@ namespace Page2Feed.Web.Program
     public class FeedBackgroundService : BackgroundService
     {
 
-        public static DateTimeOffset NextFeedCheck; // HACK
-
+        private readonly IFeedMonitor _feedMonitor;
         private readonly IFeedService _feedService;
         private readonly ILogger _log;
         private readonly TimeSpan _feedCheckInterval;
 
-        public FeedBackgroundService(IFeedService feedService, IConfiguration configuration)
+        public FeedBackgroundService(IFeedService feedService, IConfiguration configuration, IFeedMonitor feedMonitor)
         {
+            _feedMonitor = feedMonitor;
             _feedService = feedService;
             _log = LogManager.GetLogger("Feeds");
             if (!TimeSpan.TryParse(configuration["Page2Feed:FeedCheckInterval"], out _feedCheckInterval))
@@ -28,7 +28,7 @@ namespace Page2Feed.Web.Program
                     "Could not parse feed check interval",
                     "Page2Feed:FeedCheckInterval"
                     );
-            NextFeedCheck = DateTimeOffset.Now + _feedCheckInterval;
+            _feedMonitor.SetNextFeedCheck(DateTimeOffset.Now + _feedCheckInterval);
         }
 
         protected override async Task ExecuteAsync(
@@ -42,7 +42,7 @@ namespace Page2Feed.Web.Program
                     _log.Trace("Running feed task (FeedHostedService.ExecuteAsync)...");
                     await _feedService.ProcessFeeds();
                     _log.Trace($"Waiting {_feedCheckInterval:g} for next run...");
-                    NextFeedCheck = DateTimeOffset.Now + _feedCheckInterval;
+                    _feedMonitor.SetNextFeedCheck(DateTimeOffset.Now + _feedCheckInterval);
                     await Task.Delay(_feedCheckInterval, stoppingToken);
                     if (stoppingToken.IsCancellationRequested)
                     {

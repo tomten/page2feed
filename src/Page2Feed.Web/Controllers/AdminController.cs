@@ -1,9 +1,9 @@
-﻿using System.Collections;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Page2Feed.Core.Services.Interfaces;
 using Page2Feed.Web.Models;
+using Page2Feed.Web.Program;
 
 namespace Page2Feed.Web.Controllers
 {
@@ -12,10 +12,15 @@ namespace Page2Feed.Web.Controllers
     {
 
         private readonly IFeedService _feedService;
+        private readonly IFeedMonitor _feedMonitor;
 
-        public AdminController(IFeedService feedService)
+        public AdminController(
+            IFeedService feedService,
+            IFeedMonitor feedMonitor
+            )
         {
             _feedService = feedService;
+            _feedMonitor = feedMonitor;
         }
 
         [Route("~/")]
@@ -28,6 +33,7 @@ namespace Page2Feed.Web.Controllers
             var adminIndexViewModel =
                 new AdminIndexViewModel
                 {
+                    NextFeedCheck = _feedMonitor.GetNextFeedCheck(),
                     Feeds =
                         feeds.Select(
                             feed =>
@@ -53,4 +59,5 @@ namespace Page2Feed.Web.Controllers
         }
 
     }
+
 }

@@ -20,36 +20,35 @@ namespace Page2Feed.Core.Services
         }
 
         public static string TimeDelta(
-            this TimeSpan timeSpan,
-            bool past // TODO: infer automatically
+            this TimeSpan timeSpan
             )
         {
             var delta = Math.Abs(timeSpan.TotalSeconds);
 
-            if (delta < 1 * (60 * 1))
+            if (delta < 1 * 60 * 1)
                 return timeSpan.Seconds == 1 ? "one second" : timeSpan.Seconds + " seconds";
 
-            if (delta < 2 * (60 * 1))
+            if (delta < 2 * 60 * 1)
                 return "a minute";
 
-            if (delta < 45 * (60 * 1))
+            if (delta < 45 * 60 * 1)
                 return timeSpan.Minutes + " minutes";
 
-            if (delta < 90 * (60 * 1))
+            if (delta < 90 * 60 * 1)
                 return "an hour";
 
-            if (delta < 24 * (60 * (60 * 1)))
+            if (delta < 24 * 60 * 60 * 1)
                 return timeSpan.Hours + " hours";
 
-            if (delta < 48 * (60 * (60 * 1)))
+            if (delta < 48 * 60 * 60 * 1)
             {
-                return past ? "yesterday" : "tomorrow";
+                return "one day";
             }
 
-            if (delta < 30 * (24 * (60 * (60 * 1))))
+            if (delta < 30 * 24 * 60 * 60 * 1)
                 return timeSpan.Days + " days";
 
-            if (delta < 12 * (30 * (24 * (60 * (60 * 1)))))
+            if (delta < 12 * 30 * 24 * 60 * 60 * 1)
             {
                 var months = Convert.ToInt32(Math.Floor((double)timeSpan.Days / 30));
                 return months <= 1 ? "one month" : months + " months";

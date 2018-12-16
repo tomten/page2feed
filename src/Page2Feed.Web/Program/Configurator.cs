@@ -36,6 +36,7 @@ namespace Page2Feed.Web.Program
             services.AddTransient<IFeedService, FeedService>();
             services.AddTransient<IFeedRepository, FileFeedRepository>(provider => new FileFeedRepository(Configuration["Page2Feed:FileFeedRepository:FeedBasePath"]));
             services.AddTransient<IWebRepository, WebRepository>();
+            services.AddSingleton<IFeedMonitor, FeedMonitor>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
