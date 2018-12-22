@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System;
+using System.Diagnostics;
+using Microsoft.AspNetCore;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -6,16 +9,36 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Page2Feed.Core.Services;
 using Page2Feed.Core.Services.Interfaces;
+using Page2Feed.Web.Program.Services;
 
 namespace Page2Feed.Web.Program
 {
 
-    public class Configurator
+    public class Page2Feed
     {
 
-        public Configurator(IConfiguration configuration)
+        public Page2Feed(IConfiguration configuration)
         {
             Configuration = configuration;
+        }
+
+        public static void Main(string[] args)
+        {
+            try
+            {
+                WebHost
+                    .CreateDefaultBuilder(args)
+                    .UseStartup<Page2Feed>()
+                    .Build()
+                    .Run()
+                    ;
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception);
+                Debug.WriteLine(exception);
+                throw;
+            }
         }
 
         private IConfiguration Configuration { get; }
@@ -36,6 +59,7 @@ namespace Page2Feed.Web.Program
             services.AddTransient<IFeedService, FeedService>();
             services.AddTransient<IFeedRepository, FileFeedRepository>(provider => new FileFeedRepository(Configuration["Page2Feed:FileFeedRepository:FeedBasePath"]));
             services.AddTransient<IWebRepository, WebRepository>();
+            services.AddTransient<IHtml2TextConverter, Html2TextConverter>();
             services.AddSingleton<IFeedMonitor, FeedMonitor>();
         }
 

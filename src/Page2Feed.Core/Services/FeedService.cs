@@ -12,21 +12,23 @@ using Page2Feed.Core.Services.Interfaces;
 
 namespace Page2Feed.Core.Services
 {
-
     public class FeedService : IFeedService
     {
 
         private readonly IFeedRepository _feedRepository;
         private readonly IWebRepository _webRepository;
+        private readonly IHtml2TextConverter _html2TextConverter;
         private readonly ILogger _log;
 
         public FeedService(
             IFeedRepository feedRepository,
-            IWebRepository webRepository
+            IWebRepository webRepository,
+            IHtml2TextConverter html2TextConverter
             )
         {
             _feedRepository = feedRepository;
             _webRepository = webRepository;
+            _html2TextConverter = html2TextConverter;
             _log = LogManager.GetLogger("Feeds");
         }
 
@@ -108,16 +110,17 @@ namespace Page2Feed.Core.Services
             return s.Md5Hex();
         }
 
-        public async Task<FeedStateEx> GetCurrentState(
-            string contentsOld,
+        public async Task<FeedStateEx> GetCurrentStateAsync(
+            string contentsOldText,
             Uri uri
             )
         {
-            var contents = await _webRepository.GetContents(uri);
+            var contentsCurrentHtml = await _webRepository.GetContents(uri);
+            var contentsCurrentText = await _html2TextConverter.Html2TextAsync(contentsCurrentHtml);
             var contentSummary = await
                 MakeSummary(
-                    contentsOld,
-                    contents
+                    contentsOldText,
+                    contentsCurrentText
                 );
             var thumbprint = MakeThumbprint(contentSummary);
             var feedState =
@@ -130,48 +133,16 @@ namespace Page2Feed.Core.Services
         }
 
         public async Task<string> MakeSummary(
-            string originalHtmlContentsOld,
-            string originalHtmlContents
+            string contentsOld,
+            string contents
             )
         {
-            var html = new HtmlParser();
-            var doc = await html.ParseAsync(originalHtmlContents);
-            doc.Body.Descendents<IElement>()
-                .Where(htmlNode => htmlNode.TagName == "script" || htmlNode.TagName == "style")
-                .ToList()
-                .ForEach(htmlNode => htmlNode.Parent.RemoveChild(htmlNode));
-            var text =
-                doc
-                    .Body
-                    .InnerText
-                    .RegexReplace(
-                        @"\s+",
-                        " "
-                        );
-            var textOld = ""; // HACK
-            if (originalHtmlContentsOld != null)
-            {
-                var htmlOld = new HtmlParser();
-                var docOld = await htmlOld.ParseAsync(originalHtmlContentsOld);
-                docOld.Body.Descendents<IElement>()
-                    .Where(htmlNode => htmlNode.TagName == "script" || htmlNode.TagName == "style")
-                    .ToList()
-                    .ForEach(htmlNode => htmlNode.Parent.RemoveChild(htmlNode));
-                textOld =
-                    docOld
-                        .Body
-                        .InnerText
-                        .RegexReplace(
-                            @"\s+",
-                            " "
-                            );
-            }
-            var textTrimmed =
+            var contentsTrimmed =
                 TrimSameStart(
-                    textOld.Trim(),
-                    text.Trim()
+                    contentsOld.Trim(),
+                    contents.Trim()
                 );
-            return textTrimmed;
+            return contentsTrimmed;
         }
 
         public async Task ProcessFeeds()
@@ -185,12 +156,9 @@ namespace Page2Feed.Core.Services
                 try
                 {
                     var storedContentSummaryThumbprint = feed.StoredState.ContentSummaryThumbprint;
-                    var storedContentSummary =
-                        feed.Entries.Any()
-                            ? feed.Entries.Last().Body
-                            : null;
+                    var storedContentSummary = feed.Entries.FirstOrDefault()?.Body;
                     _log.Trace($"Getting current state for feed {feed.Name}...");
-                    var newState = await GetCurrentState(storedContentSummary, feed.Uri);
+                    var newState = await GetCurrentStateAsync(storedContentSummary, feed.Uri);
                     _log.Trace($"Got current state for feed {feed.Name}: {newState.ContentSummaryThumbprint}.");
                     if (newState.ContentSummaryThumbprint != storedContentSummaryThumbprint)
                     {
@@ -225,7 +193,7 @@ namespace Page2Feed.Core.Services
         public async Task DeleteFeed(string feedGroupName, string feedName)
         {
             await _feedRepository.Delete(
-                feedGroupName, 
+                feedGroupName,
                 feedName
                 );
         }

@@ -6,7 +6,7 @@ using Microsoft.Extensions.Hosting;
 using NLog;
 using Page2Feed.Core.Services.Interfaces;
 
-namespace Page2Feed.Web.Program
+namespace Page2Feed.Web.Program.Services
 {
 
     // ReSharper disable once ClassNeverInstantiated.Global
@@ -28,6 +28,9 @@ namespace Page2Feed.Web.Program
                     "Could not parse feed check interval",
                     "Page2Feed:FeedCheckInterval"
                     );
+#if DEBUG
+            _feedCheckInterval = TimeSpan.FromSeconds(5);
+#endif
             _feedMonitor.SetNextFeedCheck(DateTimeOffset.Now + _feedCheckInterval);
         }
 

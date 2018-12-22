@@ -17,8 +17,8 @@ namespace Page2Feed.Core.Services.Interfaces
 
         Task<IEnumerable<Feed>> GetFeeds();
 
-        Task<FeedStateEx> GetCurrentState(
-            string latestSummary, // TODO
+        Task<FeedStateEx> GetCurrentStateAsync(
+            string contentsOldText, // TODO
             Uri uri
             );
 
