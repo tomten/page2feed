@@ -122,11 +122,11 @@ namespace Page2Feed.Core.Services
                     contentsOldText,
                     contentsCurrentText
                 );
-            var thumbprint = MakeThumbprint(contentSummary);
+            var contentThumbprint = MakeThumbprint(contentsCurrentText);
             var feedState =
                 new FeedStateEx
                 {
-                    ContentSummaryThumbprint = thumbprint,
+                    ContentThumbprint = contentThumbprint,
                     ContentSummary = contentSummary
                 };
             return feedState;
@@ -155,12 +155,12 @@ namespace Page2Feed.Core.Services
                 _log.Trace($"Processing feed {feed.Group}:{feed.Name}...");
                 try
                 {
-                    var storedContentSummaryThumbprint = feed.StoredState.ContentSummaryThumbprint;
-                    var storedContentSummary = feed.Entries.FirstOrDefault()?.Body;
+                    var feedSummaryThumbprint = feed.StoredState.ContentThumbprint;
+                    var latestEntrySummary = feed.Entries.FirstOrDefault()?.Body;
                     _log.Trace($"Getting current state for feed {feed.Name}...");
-                    var newState = await GetCurrentStateAsync(storedContentSummary, feed.Uri);
-                    _log.Trace($"Got current state for feed {feed.Name}: {newState.ContentSummaryThumbprint}.");
-                    if (newState.ContentSummaryThumbprint != storedContentSummaryThumbprint)
+                    var newState = await GetCurrentStateAsync(latestEntrySummary, feed.Uri);
+                    _log.Trace($"Got current state for feed {feed.Name}: {newState.ContentThumbprint}.");
+                    if (newState.ContentThumbprint != feedSummaryThumbprint)
                     {
                         _log.Info($"State has changed for feed {feed.Group}:{feed.Name}; updating feed...");
                         _log.Trace($"Inserting entry into feed {feed.Name}...");
@@ -174,7 +174,7 @@ namespace Page2Feed.Core.Services
                             }
                         );
                         _log.Trace($"Done inserting entry into feed {feed.Name}.");
-                        feed.StoredState.ContentSummaryThumbprint = newState.ContentSummaryThumbprint;
+                        feed.StoredState.ContentThumbprint = newState.ContentThumbprint;
                         _log.Info($"Saving feed {feed.Name}...");
                         await SaveFeed(feed);
                         _log.Trace($"Done saving feed {feed.Name}.");
