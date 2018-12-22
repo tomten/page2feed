@@ -117,12 +117,12 @@ namespace Page2Feed.Core.Services
         {
             var contentsCurrentHtml = await _webRepository.GetContents(uri);
             var contentsCurrentText = await _html2TextConverter.Html2TextAsync(contentsCurrentHtml);
-            var contentSummary = await
+            var contentThumbprint = MakeThumbprint(contentsCurrentText);
+            var contentSummary = 
                 MakeSummary(
                     contentsOldText,
                     contentsCurrentText
                 );
-            var contentThumbprint = MakeThumbprint(contentsCurrentText);
             var feedState =
                 new FeedStateEx
                 {
@@ -132,7 +132,7 @@ namespace Page2Feed.Core.Services
             return feedState;
         }
 
-        public async Task<string> MakeSummary(
+        public string MakeSummary(
             string contentsOld,
             string contents
             )
@@ -155,12 +155,11 @@ namespace Page2Feed.Core.Services
                 _log.Trace($"Processing feed {feed.Group}:{feed.Name}...");
                 try
                 {
-                    var feedSummaryThumbprint = feed.StoredState.ContentThumbprint;
                     var latestEntrySummary = feed.Entries.FirstOrDefault()?.Body;
                     _log.Trace($"Getting current state for feed {feed.Name}...");
                     var newState = await GetCurrentStateAsync(latestEntrySummary, feed.Uri);
                     _log.Trace($"Got current state for feed {feed.Name}: {newState.ContentThumbprint}.");
-                    if (newState.ContentThumbprint != feedSummaryThumbprint)
+                    if (newState.ContentThumbprint != feed.StoredState.ContentThumbprint)
                     {
                         _log.Info($"State has changed for feed {feed.Group}:{feed.Name}; updating feed...");
                         _log.Trace($"Inserting entry into feed {feed.Name}...");

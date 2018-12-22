@@ -27,6 +27,7 @@ namespace Page2Feed.Tests.Tests
             var feedService =
                 new FeedService(
                     null,
+                    null,
                     null
                     );
 
@@ -62,6 +63,7 @@ namespace Page2Feed.Tests.Tests
 
             var feedService =
                 new FeedService(
+                    null,
                     null,
                     null
                     );
@@ -106,7 +108,8 @@ namespace Page2Feed.Tests.Tests
 
             // Act
             var summary =
-                await new FeedService(
+                new FeedService(
+                        null,
                         null,
                         null
                     )
