@@ -139,12 +139,12 @@ namespace Page2Feed.Core.Services
             string contents
             )
         {
-            var contentsTrimmed =
+            var contentsWithSameStartRemoved =
                 TrimSameStart(
                     (contentsOld ?? "").Trim(),
                     contents.Trim()
                 );
-            return contentsTrimmed;
+            return contentsWithSameStartRemoved;
         }
 
         public async Task ProcessFeeds()
@@ -181,6 +181,7 @@ namespace Page2Feed.Core.Services
                         );
                         _log.Trace($"Done inserting entry into feed {feed.Name}.");
                         feed.StoredState.ContentTextThumbprint = newState.ContentTextThumbprint;
+                        feed.StoredState.ContentText = newState.ContentText;
                         _log.Info($"Saving feed {feed.Name}...");
                         await SaveFeed(feed);
                         _log.Trace($"Done saving feed {feed.Name}.");
