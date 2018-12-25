@@ -21,6 +21,8 @@ namespace Page2Feed.Core.Model
 
         public string Id { get; set; }
 
+        public string UserName { get; set; }
+
         public override string ToString()
         {
             return $"{Group} {Name} (#{Entries.Count}) {Uri}";

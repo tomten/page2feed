@@ -14,7 +14,7 @@ namespace Page2Feed.Web.Models
 
         public int Entries { get; set; }
 
-        public DateTimeOffset LastUpdated { get; set; }
+        public DateTimeOffset? LastUpdated { get; set; }
 
     }
 

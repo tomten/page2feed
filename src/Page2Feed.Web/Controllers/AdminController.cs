@@ -1,5 +1,7 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Page2Feed.Core.Services.Interfaces;
 using Page2Feed.Web.Models;
@@ -8,6 +10,7 @@ using Page2Feed.Web.Program;
 namespace Page2Feed.Web.Controllers
 {
 
+    [Authorize]
     public class AdminController : Controller
     {
 
@@ -29,7 +32,7 @@ namespace Page2Feed.Web.Controllers
         )
         {
             ViewBag.Message = message;
-            var feeds = await _feedService.GetFeeds();
+            var feeds = await _feedService.GetFeeds(User.Identity.Name);
             var adminIndexViewModel =
                 new AdminIndexViewModel
                 {
@@ -42,7 +45,7 @@ namespace Page2Feed.Web.Controllers
                                     Name = feed.Name,
                                     Group = feed.Group,
                                     Entries = feed.Entries.Count,
-                                    LastUpdated = feed.Entries.Max(f => f.Timestamp),
+                                    LastUpdated = !feed.Entries.Any() ? new DateTimeOffset?() : feed.Entries.Max(f => f.Timestamp),
                                     Link = Url.Action(
                                         "Get",
                                         "Feed",

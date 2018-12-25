@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using NLog;
@@ -23,6 +24,7 @@ namespace Page2Feed.Core.Services
         }
 
         public async Task<Feed> Get(
+            string userName,
             string feedGroupName,
             string feedName
             )
@@ -31,6 +33,7 @@ namespace Page2Feed.Core.Services
             {
                 var filePath =
                     MakeFilePath(
+                        userName,
                         feedGroupName,
                         feedName
                     );
@@ -46,6 +49,15 @@ namespace Page2Feed.Core.Services
                 _log.Error($"Error when getting feed {feedGroupName}:{feedName}: {exception}");
                 throw;
             }
+        }
+
+        public async Task<Feed> Get(string id)
+        {
+            var feeds = await GetAll();
+            return feeds.Single(
+                feed =>
+                    feed.Id == id
+                );
         }
 
         private async Task<Feed> GetByFileName(
@@ -75,12 +87,14 @@ namespace Page2Feed.Core.Services
         }
 
         private string MakeFilePath(
+            string userName,
             string feedGroupName,
             string feedName
             )
         {
             var fileName =
                 MakeFileName(
+                    userName,
                     feedGroupName,
                     feedName
                 );
@@ -98,6 +112,7 @@ namespace Page2Feed.Core.Services
         {
             var filePath =
                 MakeFilePath(
+                    feedToStore.UserName,
                     feedToStore.Group,
                     feedToStore.Name
                 );
@@ -127,25 +142,56 @@ namespace Page2Feed.Core.Services
             return feeds;
         }
 
+#pragma warning disable 1998
         public async Task Delete(
+#pragma warning restore 1998
+            string userName,
             string feedGroupName,
             string feedName
             )
         {
             var filePath =
                 MakeFilePath(
+                    userName,
                     feedGroupName,
                     feedName
                 );
             File.Delete(filePath);
         }
 
-        private string MakeFileName(
+        public async Task Delete(
+            string feedId
+            )
+        {
+            var feed = await Get(feedId);
+            var filePath =
+                MakeFilePath(
+                    feed.UserName,
+                    feed.Group,
+                    feed.Name
+                );
+            File.Delete(filePath);
+        }
+
+        public async Task<string> GetFeedId(
+            string userName,
             string feedGroupName,
             string feedName
             )
         {
-            return $"{feedGroupName}{feedName}".Md5Hex();
+            var feedFileName = MakeFileName(userName, feedGroupName, feedName);
+            var feed = await GetByFileName(feedFileName);
+            return feed.Id;
+        }
+
+        private string MakeFileName(
+            string userName,
+            string feedGroupName,
+            string feedName
+            )
+        {
+            // TODO: Hash the ID instead?
+            return $"{userName}{feedGroupName}{feedName}".Md5Hex();
         }
 
     }

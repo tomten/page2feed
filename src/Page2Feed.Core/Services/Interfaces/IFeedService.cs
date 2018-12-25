@@ -11,20 +11,21 @@ namespace Page2Feed.Core.Services.Interfaces
     {
 
         Task<Feed> GetFeed(
+            string userName,
             string feedGroupName,
             string feedName
             );
 
-        Task<IEnumerable<Feed>> GetFeeds();
+        Task<IEnumerable<Feed>> GetFeeds(string userName);
 
-        Task<FeedStateEx> GetCurrentStateAsync(
-            string contentsOldText, // TODO
-            Uri uri
-            );
+        Task<IEnumerable<Feed>> GetAllFeeds();
+
+        Task<FeedState> GetCurrentStateAsync(Uri uri);
 
         Task SaveFeed(Feed feed);
 
         Task CreateFeed(
+            string userName,
             string feedName,
             string feedGroupName,
             string feedUri
@@ -41,6 +42,7 @@ namespace Page2Feed.Core.Services.Interfaces
         Task ProcessFeeds();
 
         Task DeleteFeed(
+            string userName,
             string feedName, 
             string feedGroupName
             );

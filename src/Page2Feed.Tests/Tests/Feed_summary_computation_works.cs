@@ -85,7 +85,9 @@ namespace Page2Feed.Tests.Tests
         }
 
         [Test]
+#pragma warning disable 1998
         public async Task Feed_summary_is_computed_correctly()
+#pragma warning restore 1998
         {
 
             // Arrange

@@ -2,9 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using AngleSharp.Dom;
-using AngleSharp.Extensions;
-using AngleSharp.Parser.Html;
 using NLog;
 using Page2Feed.Core.Model;
 using Page2Feed.Core.Model.Atom;
@@ -12,6 +9,7 @@ using Page2Feed.Core.Services.Interfaces;
 
 namespace Page2Feed.Core.Services
 {
+
     public class FeedService : IFeedService
     {
 
@@ -33,20 +31,26 @@ namespace Page2Feed.Core.Services
         }
 
         public async Task<Feed> GetFeed(
+            string userName,
             string feedGroupName,
             string feedName
             )
         {
-            var feed = await
+            var feedId = await
                 _feedRepository
-                    .Get(
+                    .GetFeedId(
+                        userName,
                         feedGroupName,
                         feedName
-                    );
+                        );
+            var feed = await
+                _feedRepository
+                    .Get(feedId);
             return feed;
         }
 
         public async Task CreateFeed(
+            string userName,
             string feedName,
             string feedGroupName,
             string feedUri
@@ -54,12 +58,13 @@ namespace Page2Feed.Core.Services
         {
             var feed = new Feed
             {
+                UserName = userName,
                 Name = feedName,
                 Group = feedGroupName,
                 Entries = new List<FeedEntry>(),
                 StoredState = new FeedState(),
                 Uri = new Uri(feedUri),
-                Version = 2,
+                Version = 3,
                 Id = Guid.NewGuid().ToString("D")
             };
             await SaveFeed(feed);
@@ -100,7 +105,12 @@ namespace Page2Feed.Core.Services
             return atom;
         }
 
-        public async Task<IEnumerable<Feed>> GetFeeds()
+        public async Task<IEnumerable<Feed>> GetFeeds(string userName)
+        {
+            return (await _feedRepository.GetAll()).Where(feed => feed.UserName == userName);
+        }
+
+        public async Task<IEnumerable<Feed>> GetAllFeeds()
         {
             return await _feedRepository.GetAll();
         }
@@ -110,24 +120,16 @@ namespace Page2Feed.Core.Services
             return s.Md5Hex();
         }
 
-        public async Task<FeedStateEx> GetCurrentStateAsync(
-            string contentsOldText,
-            Uri uri
-            )
+        public async Task<FeedState> GetCurrentStateAsync(Uri uri)
         {
             var contentsCurrentHtml = await _webRepository.GetContents(uri);
             var contentsCurrentText = await _html2TextConverter.Html2TextAsync(contentsCurrentHtml);
             var contentThumbprint = MakeThumbprint(contentsCurrentText);
-            var contentSummary = 
-                MakeSummary(
-                    contentsOldText,
-                    contentsCurrentText
-                );
             var feedState =
-                new FeedStateEx
+                new FeedState
                 {
-                    ContentThumbprint = contentThumbprint,
-                    ContentSummary = contentSummary
+                    ContentTextThumbprint = contentThumbprint,
+                    ContentText = contentsCurrentText
                 };
             return feedState;
         }
@@ -139,7 +141,7 @@ namespace Page2Feed.Core.Services
         {
             var contentsTrimmed =
                 TrimSameStart(
-                    contentsOld.Trim(),
+                    (contentsOld ?? "").Trim(),
                     contents.Trim()
                 );
             return contentsTrimmed;
@@ -148,32 +150,37 @@ namespace Page2Feed.Core.Services
         public async Task ProcessFeeds()
         {
             _log.Trace("Getting feeds...");
-            var feeds = (await GetFeeds()).ToList();
+            var feeds = (await GetAllFeeds()).ToList();
             _log.Trace($"Done getting feeds. {feeds.Count} feeds gotten ({string.Join(",", feeds.Select(f => f.Name))}).");
             foreach (var feed in feeds)
             {
                 _log.Trace($"Processing feed {feed.Group}:{feed.Name}...");
                 try
                 {
-                    var latestEntrySummary = feed.Entries.FirstOrDefault()?.Body;
+                    var currentStateThumbprint = feed.StoredState.ContentTextThumbprint;
                     _log.Trace($"Getting current state for feed {feed.Name}...");
-                    var newState = await GetCurrentStateAsync(latestEntrySummary, feed.Uri);
-                    _log.Trace($"Got current state for feed {feed.Name}: {newState.ContentThumbprint}.");
-                    if (newState.ContentThumbprint != feed.StoredState.ContentThumbprint)
+                    var newState = await GetCurrentStateAsync(feed.Uri);
+                    _log.Trace($"Got current state for feed {feed.Name}: {newState.ContentTextThumbprint}.");
+                    if (newState.ContentTextThumbprint != feed.StoredState.ContentTextThumbprint)
                     {
                         _log.Info($"State has changed for feed {feed.Group}:{feed.Name}; updating feed...");
                         _log.Trace($"Inserting entry into feed {feed.Name}...");
+                        var newSummary =
+                            MakeSummary(
+                                feed.StoredState.ContentText,
+                                newState.ContentText
+                                );
                         feed.Entries.Insert(
                             0,
                             new FeedEntry
                             {
                                 Timestamp = DateTimeOffset.Now,
-                                Body = newState.ContentSummary,
+                                Body = newSummary,
                                 Id = Guid.NewGuid().ToString("D")
                             }
                         );
                         _log.Trace($"Done inserting entry into feed {feed.Name}.");
-                        feed.StoredState.ContentThumbprint = newState.ContentThumbprint;
+                        feed.StoredState.ContentTextThumbprint = newState.ContentTextThumbprint;
                         _log.Info($"Saving feed {feed.Name}...");
                         await SaveFeed(feed);
                         _log.Trace($"Done saving feed {feed.Name}.");
@@ -189,12 +196,20 @@ namespace Page2Feed.Core.Services
             }
         }
 
-        public async Task DeleteFeed(string feedGroupName, string feedName)
+        public async Task DeleteFeed(
+            string userName,
+            string feedGroupName,
+            string feedName
+            )
         {
-            await _feedRepository.Delete(
-                feedGroupName,
-                feedName
-                );
+            var feedId = await
+                _feedRepository
+                    .GetFeedId(
+                        userName,
+                        feedGroupName,
+                        feedName
+                        );
+            await _feedRepository.Delete(feedId);
         }
 
         public async Task SaveFeed(Feed feed)
