@@ -66,20 +66,20 @@ namespace Page2Feed.Web.Program
                 .AddDefaultUI(UIFramework.Bootstrap4)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
-            // https://github.com/aspnet/AspNetCore/issues/6069#issuecomment-449461197
+            // https://github.com/aspnet/AspNetCore/issues/6069
+            // https://github.com/aspnet/AspNetCore/pull/6338/files
             services.AddAuthentication().AddGoogle(googleOptions =>
             {
                 googleOptions.ClientId = Configuration["Authentication:Google:ClientId"];
                 googleOptions.ClientSecret = Configuration["Authentication:Google:ClientSecret"];
-                googleOptions.UserInformationEndpoint = "https://openidconnect.googleapis.com/v1/userinfo";
+                googleOptions.UserInformationEndpoint = "https://www.googleapis.com/oauth2/v2/userinfo";
                 googleOptions.ClaimActions.Clear();
-                googleOptions.ClaimActions.MapJsonKey(ClaimTypes.NameIdentifier, "sub");
+                googleOptions.ClaimActions.MapJsonKey(ClaimTypes.NameIdentifier, "id");
                 googleOptions.ClaimActions.MapJsonKey(ClaimTypes.Name, "name");
-                googleOptions.ClaimActions.MapJsonKey(ClaimTypes.GivenName, "given_Name");
-                googleOptions.ClaimActions.MapJsonKey(ClaimTypes.Surname, "family_Name");
-                googleOptions.ClaimActions.MapJsonKey("urn:google:profile", "profile");
+                googleOptions.ClaimActions.MapJsonKey(ClaimTypes.GivenName, "given_name");
+                googleOptions.ClaimActions.MapJsonKey(ClaimTypes.Surname, "family_name");
+                googleOptions.ClaimActions.MapJsonKey("urn:google:profile", "link");
                 googleOptions.ClaimActions.MapJsonKey(ClaimTypes.Email, "email");
-                googleOptions.ClaimActions.MapJsonKey("urn:google:image", "picture");
             });
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
