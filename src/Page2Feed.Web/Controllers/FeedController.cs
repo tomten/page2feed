@@ -1,9 +1,6 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
@@ -100,18 +97,9 @@ namespace Page2Feed.Web.Controllers
                             lastUpdatedTime ?? DateTimeOffset.MinValue,
                             Request.GetDisplayUrl()
                         );
-                var atomMemoryStream = new MemoryStream();
-                var atomStringWriter = new StreamWriter(
-                    atomMemoryStream,
-                    Encoding.UTF8
-                );
-                new XmlSerializer(typeof(AtomFeed)).Serialize(
-                    atomStringWriter,
-                    atom
-                );
                 _log.Trace($"Returning content for feed {feedGroupName}:{feedName}...");
                 return Content(
-                    Encoding.UTF8.GetString(atomMemoryStream.GetBuffer()),
+                    atom.XmlString(),
                     "application/atom+xml"
                 );
             }
