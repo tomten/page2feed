@@ -105,7 +105,7 @@ namespace Page2Feed.Core.Services
             return atom;
         }
 
-        public async Task<IEnumerable<Feed>> GetFeeds(string userName)
+        public async Task<IEnumerable<Feed>> GetFeedsAsync(string userName)
         {
             return (await _feedRepository.GetAll()).Where(feed => feed.UserName == userName);
         }

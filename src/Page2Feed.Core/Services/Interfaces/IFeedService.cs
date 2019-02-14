@@ -16,7 +16,7 @@ namespace Page2Feed.Core.Services.Interfaces
             string feedName
             );
 
-        Task<IEnumerable<Feed>> GetFeeds(string userName);
+        Task<IEnumerable<Feed>> GetFeedsAsync(string userName);
 
         Task<IEnumerable<Feed>> GetAllFeeds();
 

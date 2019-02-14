@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using NLog;
-using Page2Feed.Core.Model.Atom;
 using Page2Feed.Core.Services.Interfaces;
 
 namespace Page2Feed.Web.Controllers
@@ -96,7 +95,7 @@ namespace Page2Feed.Web.Controllers
                             feedDescription,
                             lastUpdatedTime ?? DateTimeOffset.MinValue,
                             Request.GetDisplayUrl()
-                        );
+                        );  
                 _log.Trace($"Returning content for feed {feedGroupName}:{feedName}...");
                 return Content(
                     atom.XmlString(),
