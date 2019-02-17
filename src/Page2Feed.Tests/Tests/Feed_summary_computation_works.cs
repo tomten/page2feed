@@ -85,7 +85,9 @@ namespace Page2Feed.Tests.Tests
         }
 
         [Test]
+#pragma warning disable 1998
         public async Task Feed_summary_is_computed_correctly()
+#pragma warning restore 1998
         {
 
             // Arrange
@@ -105,6 +107,9 @@ namespace Page2Feed.Tests.Tests
                     "sample2.html"
                 )
             );
+            var h = new Html2TextConverter();
+            var text1 = await h.Html2TextAsync(html1);
+            var text2 = await h.Html2TextAsync(html2);
 
             // Act
             var summary =
@@ -114,8 +119,8 @@ namespace Page2Feed.Tests.Tests
                         null
                     )
                     .MakeSummary(
-                        html1,
-                        html2
+                        text1,
+                        text2
                         );
 
             // Assert

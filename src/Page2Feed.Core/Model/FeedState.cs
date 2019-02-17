@@ -10,7 +10,12 @@
         /// <summary>
         /// The thumbprint of the text version of the current state of the feed source.
         /// </summary>
-        public string ContentThumbprint { get; set; }
+        public string ContentTextThumbprint { get; set; }
+
+        /// <summary>
+        /// The text version of the current state of the feed source.
+        /// </summary>
+        public string ContentText { get; set; }
 
     }
 

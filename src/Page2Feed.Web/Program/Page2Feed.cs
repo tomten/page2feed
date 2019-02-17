@@ -1,14 +1,20 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Security.Claims;
 using Microsoft.AspNetCore;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Page2Feed.Core.Services;
 using Page2Feed.Core.Services.Interfaces;
+using Page2Feed.Web.Data;
 using Page2Feed.Web.Program.Services;
 
 namespace Page2Feed.Web.Program
@@ -53,14 +59,42 @@ namespace Page2Feed.Web.Program
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
+            services.AddDbContext<ApplicationDbContext>(options =>
+                options.UseSqlServer(
+                    Configuration.GetConnectionString("DefaultConnection")));
+            services
+                .AddDefaultIdentity<IdentityUser>()
+                .AddRoles<IdentityRole>()
+                .AddDefaultUI(UIFramework.Bootstrap4)
+                .AddEntityFrameworkStores<ApplicationDbContext>();
+
+            // https://github.com/aspnet/AspNetCore/issues/6069
+            // https://github.com/aspnet/AspNetCore/pull/6338/files
+            services.AddAuthentication().AddGoogle(googleOptions =>
+            {
+                googleOptions.ClientId = Configuration["Authentication:Google:ClientId"];
+                googleOptions.ClientSecret = Configuration["Authentication:Google:ClientSecret"];
+                googleOptions.UserInformationEndpoint = "https://www.googleapis.com/oauth2/v2/userinfo";
+                googleOptions.ClaimActions.Clear();
+                googleOptions.ClaimActions.MapJsonKey(ClaimTypes.NameIdentifier, "id");
+                googleOptions.ClaimActions.MapJsonKey(ClaimTypes.Name, "name");
+                googleOptions.ClaimActions.MapJsonKey(ClaimTypes.GivenName, "given_name");
+                googleOptions.ClaimActions.MapJsonKey(ClaimTypes.Surname, "family_name");
+                googleOptions.ClaimActions.MapJsonKey("urn:google:profile", "link");
+                googleOptions.ClaimActions.MapJsonKey(ClaimTypes.Email, "email");
+            });
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            #region Page2Feed
             services.AddHostedService<FeedBackgroundService>();
             services.AddTransient<IFeedService, FeedService>();
             services.AddTransient<IFeedRepository, FileFeedRepository>(provider => new FileFeedRepository(Configuration["Page2Feed:FileFeedRepository:FeedBasePath"]));
             services.AddTransient<IWebRepository, WebRepository>();
             services.AddTransient<IHtml2TextConverter, Html2TextConverter>();
             services.AddSingleton<IFeedMonitor, FeedMonitor>();
+            #endregion
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -69,6 +103,7 @@ namespace Page2Feed.Web.Program
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseDatabaseErrorPage();
             }
             else
             {
@@ -80,6 +115,8 @@ namespace Page2Feed.Web.Program
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
+
+            app.UseAuthentication();
 
             app.UseMvc(routes =>
             {

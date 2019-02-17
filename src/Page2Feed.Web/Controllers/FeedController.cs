@@ -1,13 +1,10 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using NLog;
-using Page2Feed.Core.Model.Atom;
 using Page2Feed.Core.Services.Interfaces;
 
 namespace Page2Feed.Web.Controllers
@@ -26,6 +23,7 @@ namespace Page2Feed.Web.Controllers
             _log = LogManager.GetLogger("Feeds");
         }
 
+        [Authorize]
         [Route("~/createFeed")]
         [HttpPost]
         public async Task<ActionResult<string>> CreateFeed(
@@ -35,6 +33,7 @@ namespace Page2Feed.Web.Controllers
         )
         {
             await _feedService.CreateFeed(
+                User.Identity.Name,
                 feedName: feedName,
                 feedGroupName: feedGroupName,
                 feedUri: feedUri
@@ -46,6 +45,7 @@ namespace Page2Feed.Web.Controllers
             );
         }
 
+        [Authorize]
         [Route("~/deleteFeed")]
         [HttpPost]
         public async Task<ActionResult<string>> DeleteFeed(
@@ -54,8 +54,9 @@ namespace Page2Feed.Web.Controllers
         )
         {
             await _feedService.DeleteFeed(
-                feedName: feedName,
-                feedGroupName: feedGroupName
+                userName: User.Identity.Name,
+                feedGroupName: feedGroupName,
+                feedName: feedName
             );
             TempData["Message"] = $"Deleted feed '{feedGroupName}:{feedName}'.";
             return RedirectToAction(
@@ -75,36 +76,29 @@ namespace Page2Feed.Web.Controllers
             try
             {
                 _log.Trace($"Getting feed {feedGroupName}:{feedName}...");
+                var userName = (await _feedService.GetAllFeeds()).Single(f => f.Group == feedGroupName && f.Name == feedName).UserName;
                 var feed = await
                     _feedService.GetFeed(
+                        userName,
                         feedGroupName,
                         feedName
                     );
                 _log.Trace($"Got feed.");
                 var feedTitle = $"{feed.Group}: {feed.Name}";
                 var feedDescription = feed.Name;
-                var lastUpdatedTime = feed.Entries.Max(e => e.Timestamp);
+                var lastUpdatedTime = !feed.Entries.Any() ? new DateTimeOffset?() : feed.Entries.Max(e => e.Timestamp);
                 var atom =
                     _feedService
                         .Atom(
                             feed,
                             feedTitle,
                             feedDescription,
-                            lastUpdatedTime,
+                            lastUpdatedTime ?? DateTimeOffset.MinValue,
                             Request.GetDisplayUrl()
-                        );
-                var atomMemoryStream = new MemoryStream();
-                var atomStringWriter = new StreamWriter(
-                    atomMemoryStream,
-                    Encoding.UTF8
-                );
-                new XmlSerializer(typeof(AtomFeed)).Serialize(
-                    atomStringWriter,
-                    atom
-                );
+                        );  
                 _log.Trace($"Returning content for feed {feedGroupName}:{feedName}...");
                 return Content(
-                    Encoding.UTF8.GetString(atomMemoryStream.GetBuffer()),
+                    atom.XmlString(),
                     "application/atom+xml"
                 );
             }

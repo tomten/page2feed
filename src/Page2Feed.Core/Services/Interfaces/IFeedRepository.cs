@@ -9,9 +9,12 @@ namespace Page2Feed.Core.Services.Interfaces
     {
 
         Task<Feed> Get(
+            string userName,
             string feedGroupName,
             string feedName
             );
+
+        Task<Feed> Get(string id);
 
         Task Store(
             Feed feed
@@ -20,7 +23,18 @@ namespace Page2Feed.Core.Services.Interfaces
         Task<IEnumerable<Feed>> GetAll();
 
         Task Delete(
-            string feedGroupName, 
+            string userName,
+            string feedGroupName,
+            string feedName
+            );
+
+        Task Delete(
+            string feedId
+            );
+
+        Task<string> GetFeedId(
+            string userName,
+            string feedGroupName,
             string feedName
             );
 
