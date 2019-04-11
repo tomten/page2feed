@@ -18,6 +18,7 @@ namespace Page2Feed.Web.Program.Services
         private readonly ILogger _log;
         private readonly TimeSpan _feedCheckInterval;
 
+        /// <exception cref="T:System.ArgumentException">Could not parse feed check interval</exception>
         public FeedBackgroundService(IFeedService feedService, IConfiguration configuration, IFeedMonitor feedMonitor)
         {
             _feedMonitor = feedMonitor;

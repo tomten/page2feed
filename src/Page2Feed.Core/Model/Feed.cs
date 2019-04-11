@@ -27,6 +27,7 @@ namespace Page2Feed.Core.Model
         {
             return $"{Group} {Name} (#{Entries.Count}) {Uri}";
         }
+
     }
 
 }
