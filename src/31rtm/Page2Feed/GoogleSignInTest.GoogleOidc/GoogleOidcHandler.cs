@@ -3,10 +3,10 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using GoogleSignInTest.Core.Helpers;
 using Newtonsoft.Json;
+using Page2Feed.Core.Helpers;
 
-namespace GoogleSignInTest.GoogleOidc
+namespace Page2Feed.Auth.Google
 {
 
     /// <summary>

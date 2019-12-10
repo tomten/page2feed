@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace GoogleSignInTest.GoogleOidc
+namespace Page2Feed.Auth.Google
 {
 
     /// <summary>

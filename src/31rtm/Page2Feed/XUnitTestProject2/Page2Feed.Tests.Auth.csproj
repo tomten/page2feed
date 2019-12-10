@@ -25,9 +25,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\GoogleSignInTest.Core\GoogleSignInTest.Core.csproj" />
-    <ProjectReference Include="..\GoogleSignInTest.FacebookOauth\GoogleSignInTest.FacebookOauth.csproj" />
-    <ProjectReference Include="..\GoogleSignInTest.GoogleOidc\GoogleSignInTest.GoogleOidc.csproj" />
+    <ProjectReference Include="..\GoogleSignInTest.FacebookOauth\Page2Feed.Auth.Facebook.csproj" />
+    <ProjectReference Include="..\GoogleSignInTest.GoogleOidc\Page2Feed.Auth.Google.csproj" />
   </ItemGroup>
 
 </Project>

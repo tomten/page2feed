@@ -1,4 +1,4 @@
-﻿namespace GoogleSignInTest.GoogleOidc
+﻿namespace Page2Feed.Auth.Google
 {
 
     /// <summary>

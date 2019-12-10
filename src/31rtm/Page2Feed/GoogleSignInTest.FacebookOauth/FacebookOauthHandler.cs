@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Net.Http;
 using System.Threading.Tasks;
-using GoogleSignInTest.Core.Helpers;
 using Newtonsoft.Json;
+using Page2Feed.Core.Helpers;
 
-namespace GoogleSignInTest.FacebookOauth
+namespace Page2Feed.Auth.Facebook
 {
 
     public class FacebookOauthHandler

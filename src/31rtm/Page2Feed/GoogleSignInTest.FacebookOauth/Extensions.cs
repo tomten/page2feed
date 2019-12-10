@@ -3,7 +3,7 @@ using System.Security.Cryptography;
 using System.Text;
 using Newtonsoft.Json;
 
-namespace GoogleSignInTest.FacebookOauth
+namespace Page2Feed.Auth.Facebook
 {
 
     public static class Extensions

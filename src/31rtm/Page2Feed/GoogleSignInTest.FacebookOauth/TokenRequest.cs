@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 
-namespace GoogleSignInTest.FacebookOauth
+namespace Page2Feed.Auth.Facebook
 {
     public class TokenRequest : IEnumerable<KeyValuePair<string, string>>
     {

@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Threading.Tasks;
-using GoogleSignInTest.FacebookOauth;
-using GoogleSignInTest.GoogleOidc;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Page2Feed.Auth.Facebook;
+using Page2Feed.Auth.Google;
 using Page2Feed.Web.Models;
 
 namespace Page2Feed.Web.Controllers

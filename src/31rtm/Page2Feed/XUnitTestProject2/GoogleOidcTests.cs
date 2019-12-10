@@ -3,11 +3,12 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using GoogleSignInTest.Core.Helpers;
-using GoogleSignInTest.FacebookOauth;
+using Page2Feed.Auth.Facebook;
+using Page2Feed.Core.Helpers;
 using Xunit;
+using TokenRequest = Page2Feed.Auth.Google.TokenRequest;
 
-namespace GoogleSignInTest.Tests
+namespace Page2Feed.Tests.Auth
 {
 
     public class GoogleOidcTests
@@ -30,7 +31,7 @@ namespace GoogleSignInTest.Tests
         public void Google_OIDC_token_parameters_can_auto_enumerate()
         {
 
-            var dto = new GoogleOidc.TokenRequest { Code = "c" };
+            var dto = new TokenRequest { Code = "c" };
             var list = dto.ToList();
             Assert.Equal("c", list.Single(d => d.Key == "code").Value);
 

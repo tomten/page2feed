@@ -9,7 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\GoogleSignInTest.Core\GoogleSignInTest.Core.csproj" />
+    <ProjectReference Include="..\Page2Feed.Core\Page2Feed.Core.csproj" />
   </ItemGroup>
 
 </Project>
