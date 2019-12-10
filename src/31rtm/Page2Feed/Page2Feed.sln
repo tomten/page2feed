@@ -9,6 +9,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GoogleSignInTest.GoogleOidc
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GoogleSignInTest.Core", "GoogleSignInTest.Core\GoogleSignInTest.Core.csproj", "{F40F0957-2A81-4E47-93D7-E311E92CFC7D}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GoogleSignInTest.FacebookOauth", "GoogleSignInTest.FacebookOauth\GoogleSignInTest.FacebookOauth.csproj", "{C1C20D69-2734-4135-9AFE-FC41FBBCA131}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GoogleSignInTest.Tests", "XUnitTestProject2\GoogleSignInTest.Tests.csproj", "{3ACC1CAD-AB62-487E-9B4B-1E9A0A0E0781}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +31,14 @@ Global
 		{F40F0957-2A81-4E47-93D7-E311E92CFC7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F40F0957-2A81-4E47-93D7-E311E92CFC7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F40F0957-2A81-4E47-93D7-E311E92CFC7D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C1C20D69-2734-4135-9AFE-FC41FBBCA131}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C1C20D69-2734-4135-9AFE-FC41FBBCA131}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C1C20D69-2734-4135-9AFE-FC41FBBCA131}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C1C20D69-2734-4135-9AFE-FC41FBBCA131}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3ACC1CAD-AB62-487E-9B4B-1E9A0A0E0781}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3ACC1CAD-AB62-487E-9B4B-1E9A0A0E0781}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3ACC1CAD-AB62-487E-9B4B-1E9A0A0E0781}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3ACC1CAD-AB62-487E-9B4B-1E9A0A0E0781}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

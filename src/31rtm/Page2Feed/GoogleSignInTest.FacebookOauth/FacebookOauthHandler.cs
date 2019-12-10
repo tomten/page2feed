@@ -17,7 +17,7 @@ namespace GoogleSignInTest.FacebookOauth
         private static Uri _redirectUri; // HACK
         private readonly HttpClient _facebookOauthHttpClient = new HttpClient();
 
-        public async Task<Uri> MakeFacebookSignInUri(
+        public Uri MakeFacebookSignInUri(
             string facebookClientId,
             Uri facebookOidcSignInResponseUri
             )
