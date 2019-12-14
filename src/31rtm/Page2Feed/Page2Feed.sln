@@ -5,11 +5,11 @@ VisualStudioVersion = 16.0.29521.150
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Page2Feed.Web", "Page2Feed.Web\Page2Feed.Web.csproj", "{C0D4ECF5-DBEA-43F0-92F2-633263C3338C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Page2Feed.Auth.Google", "GoogleSignInTest.GoogleOidc\Page2Feed.Auth.Google.csproj", "{A8A1C9E1-0449-4E97-801F-F91CFF1AA50D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Page2Feed.Auth.Google", "Page2Feed.Auth.Google\Page2Feed.Auth.Google.csproj", "{A8A1C9E1-0449-4E97-801F-F91CFF1AA50D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Page2Feed.Auth.Facebook", "GoogleSignInTest.FacebookOauth\Page2Feed.Auth.Facebook.csproj", "{C1C20D69-2734-4135-9AFE-FC41FBBCA131}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Page2Feed.Auth.Facebook", "Page2Feed.Auth.Facebook\Page2Feed.Auth.Facebook.csproj", "{C1C20D69-2734-4135-9AFE-FC41FBBCA131}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Page2Feed.Tests.Auth", "XUnitTestProject2\Page2Feed.Tests.Auth.csproj", "{3ACC1CAD-AB62-487E-9B4B-1E9A0A0E0781}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Page2Feed.Tests.Auth", "Page2Feed.Tests.Auth\Page2Feed.Tests.Auth.csproj", "{3ACC1CAD-AB62-487E-9B4B-1E9A0A0E0781}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Page2Feed.Core", "Page2Feed.Core\Page2Feed.Core.csproj", "{696254CC-0594-4EE7-ACDA-89DD5F289D7A}"
 EndProject

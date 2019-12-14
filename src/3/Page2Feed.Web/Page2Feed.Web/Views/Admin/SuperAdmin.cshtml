@@ -1,0 +1,32 @@
+﻿@using Page2Feed.Core.Services
+@using Page2Feed.Web.Program
+@using Page2Feed.Web.Models
+
+@model SuperAdminViewModel
+
+@{
+    ViewData["Title"] = "SuperAdmin";
+}
+
+<div class="text-center">
+    <h1 class="display-4">@ViewData["Title"]</h1>
+</div>
+<section name="Feeds">
+    <h3>Users &amp; Feeds</h3>
+    <ul>
+        @foreach (var user in Model.Users)
+        {
+            <li>
+                @user.UserName
+                <ul>
+                    @foreach (var feed in user.Feeds)
+                    {
+                        <li>
+                            @feed.ToString()
+                        </li>
+                    }
+                </ul>
+            </li>
+        }
+    </ul>
+</section>
