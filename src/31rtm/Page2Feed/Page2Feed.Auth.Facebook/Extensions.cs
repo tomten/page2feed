@@ -19,11 +19,6 @@ namespace Page2Feed.Auth.Facebook
             return JsonConvert.DeserializeObject<T>(t);
         }
 
-        public static string ToHexString(this byte[] data)
-        {
-            return BitConverter.ToString(data).Replace("-", "").ToLowerInvariant();
-        }
-
         public static byte[] HmacSha256(this byte[] key, byte[] data)
         {
             return new HMACSHA256(key).ComputeHash(data);

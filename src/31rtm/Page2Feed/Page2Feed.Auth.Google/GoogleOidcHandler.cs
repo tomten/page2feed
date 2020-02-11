@@ -92,6 +92,11 @@ namespace Page2Feed.Auth.Google
             _googleOidcHttpClient.Dispose();
         }
 
+        public Task<string> CreateGoogleSignInUri(string googleClientId, Uri signInResponseUri)
+        {
+            throw new NotImplementedException();
+        }
+
     }
 
 }

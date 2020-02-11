@@ -27,6 +27,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Page2Feed.Auth.Facebook\Page2Feed.Auth.Facebook.csproj" />
     <ProjectReference Include="..\Page2Feed.Auth.Google\Page2Feed.Auth.Google.csproj" />
+    <ProjectReference Include="..\Page2Feed.Core.Util\Page2Feed.Core.Util.csproj" />
     <ProjectReference Include="..\Page2Feed.Core\Page2Feed.Core.csproj" />
   </ItemGroup>
 

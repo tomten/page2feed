@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Page2Feed.Auth.Google
 {
@@ -7,10 +8,12 @@ namespace Page2Feed.Auth.Google
     /// <summary>
     /// Parameters to token endpoint.
     /// </summary>
+    [SuppressMessage("Naming", "CA1707:Identifiers should not contain underscores", Justification = "Auto-generated code")]
     public class TokenRequest : IEnumerable<KeyValuePair<string, string>>
     {
 
         public string Code { get; set; }
+
         public string Client_Id { get; set; }
         public string Client_Secret { get; set; }
         public string Redirect_Uri { get; set; }

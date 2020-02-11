@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Page2Feed.Core.Helpers;
+using Page2Feed.Core.Util;
 
 namespace Page2Feed.Auth.Facebook
 {
@@ -109,7 +110,7 @@ namespace Page2Feed.Auth.Facebook
                         accessToken
                             .ToUtf8Bytes()
                         );
-            var hex = hash.ToHexString();
+            var hex = hash.Hex();
             return hex;
         }
 

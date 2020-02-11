@@ -9,6 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Page2Feed.Core.Util\Page2Feed.Core.Util.csproj" />
     <ProjectReference Include="..\Page2Feed.Core\Page2Feed.Core.csproj" />
   </ItemGroup>
 

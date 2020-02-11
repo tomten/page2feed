@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Cryptography;
@@ -6,6 +7,7 @@ using System.Text;
 using Page2Feed.Auth.Facebook;
 using Page2Feed.Auth.Google;
 using Page2Feed.Core.Helpers;
+using Page2Feed.Core.Util;
 using Xunit;
 
 namespace Page2Feed.Tests.Auth
@@ -13,21 +15,27 @@ namespace Page2Feed.Tests.Auth
 
     public class GoogleOidcTests
     {
+        private const string TestsCodeAnalysisJustification = "Tests";
 
         [Fact]
+        [SuppressMessage("Naming", "CA1707:Identifiers should not contain underscores", Justification = TestsCodeAnalysisJustification)]
+        [SuppressMessage("Globalization", "CA1308:Normalize strings to uppercase", Justification = TestsCodeAnalysisJustification)]
         public void Can_make_app_secret_proof()
         {
 
             var arrange = new FacebookOauthHandler();
             var act = arrange.MakeAppSecretProof("hej", "hopp");
-            Assert.Equal(
-                BitConverter.ToString(new HMACSHA256(Encoding.UTF8.GetBytes("hej")).ComputeHash(Encoding.UTF8.GetBytes("hopp"))).Replace("-", "").ToLowerInvariant(),
-                act
-                );
+            var bytes = Encoding.UTF8.GetBytes("hej");
+            using var hmacsha256 = new HMACSHA256(bytes);
+            var buffer = Encoding.UTF8.GetBytes("hopp");
+            var computeHash = hmacsha256.ComputeHash(buffer);
+            var assert = computeHash.Hex();
+            Assert.Equal(assert, act);
 
         }
 
         [Fact]
+        [SuppressMessage("Naming", "CA1707:Identifiers should not contain underscores", Justification = TestsCodeAnalysisJustification)]
         public void Google_OIDC_token_parameters_can_auto_enumerate()
         {
 
@@ -38,6 +46,7 @@ namespace Page2Feed.Tests.Auth
         }
 
         [Fact]
+        [SuppressMessage("Naming", "CA1707:Identifiers should not contain underscores", Justification = TestsCodeAnalysisJustification)]
         public void URI_parameter_adding_makes_correct_URIs()
         {
 
@@ -52,6 +61,7 @@ namespace Page2Feed.Tests.Auth
         }
 
         [Fact]
+        [SuppressMessage("Naming", "CA1707:Identifiers should not contain underscores", Justification = TestsCodeAnalysisJustification)]
         public void FromBase64String_needs_formal_padding()
         {
 
@@ -65,6 +75,7 @@ namespace Page2Feed.Tests.Auth
         }
 
         [Fact]
+        [SuppressMessage("Naming", "CA1707:Identifiers should not contain underscores", Justification = TestsCodeAnalysisJustification)]
         public void JwtSecurityTokenHandler_extracts_claims_from_JWTs()
         {
             var jwtIdTokenExampleString = "eyJhbGciOiJSUzI1NiIsImtpZCI6ImRiMDJhYjMwZTBiNzViOGVjZDRmODE2YmI5ZTE5NzhmNjI4NDk4OTQiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20iLCJhenAiOiI4MTA2MzU2NzQ0MzUtZmhhc2pldTJsdG83YjIydXVkYThoOG00anFoaDNsM2kuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJhdWQiOiI4MTA2MzU2NzQ0MzUtZmhhc2pldTJsdG83YjIydXVkYThoOG00anFoaDNsM2kuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJzdWIiOiIxMDMxODc5NzQ3MzI2ODc0MjkwNDQiLCJlbWFpbCI6InRvbXRlbkBnbWFpbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiYXRfaGFzaCI6IjZVS3JHb0RpMEtlaXVybHZnQ0o2VmciLCJub25jZSI6ImZkc2EiLCJpYXQiOjE1NzQwMDk2MTMsImV4cCI6MTU3NDAxMzIxM30.KVqX1U1y_vl0Pz8xNA8rWVGuLJZXAlCUd2Xt_X5HxrjTxdSQeChFxnRL_GKya-M12lvi8X3_3fxo1wOToTXoIVzEL5t3vqJOl1_saqCwNvl7WQB3E6fvI0dPCdmVaqptcRHaRHvWMFcSZ7p4zzOXVO8uTTirVvNx5Ww4GTxCsYtghWhaihnwue--YI9HLgJXUXot6fYpSJC-uaEvh8Z6VtPtImBDfLP3Xayb2KZwPiGnGANrRhTzHLWbxhuQrkOBIHmiJWYWSk3cKVOob8Rxc7QUmFQ6NndSQWcAYGgU26Xnn4fGNCi1zx4M4m_mLuAjag0PrBSWE_AvlH-grQcT-g";
